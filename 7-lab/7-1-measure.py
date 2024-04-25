@@ -30,15 +30,17 @@ troyka = 13
 
 GPIO.setup(dac, GPIO.OUT)
 GPIO.setup(led, GPIO.OUT)
-GPIO.setup(troyka, GPIO.OUT, initial=0)
+GPIO.setup(troyka, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(comp, GPIO.IN)
 
 Ts = []
 Vs = []
 
+GPIO.output(troyka, 0)
+
 try:
     start_time = time.time()
-    GPIO.output(troyka, 1) 
+    GPIO.output(troyka, 0) 
     digit = 0
     while digit < 248:
         digit = adc()
@@ -52,7 +54,7 @@ try:
     time_end1 = time.time()
     print("time is {:.2f}".format(time_end1 - start_time))
     print(digit)
-    GPIO.output(troyka, 0)
+    GPIO.output(troyka, 1)
     while digit > 6:
         digit = adc()
         print(digit)
