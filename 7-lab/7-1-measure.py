@@ -42,26 +42,29 @@ try:
     start_time = time.time()
     GPIO.output(troyka, 0) 
     digit = 0
+    count = 0
     while digit < 248:
         digit = adc()
         GPIO.output(led, to_bin(digit))
         Ts.append(time.time() - start_time)
         Vs.append(digit)
-        print(digit)
-        #time.sleep(0.01)
+        #print(digit)
+        time.sleep(0.01)
+        count += 1
         ##print("digit ={}, votage = {:.2f}\n".format(digit, digit * 3.3 / 256))
 
     time_end1 = time.time()
     print("time is {:.2f}".format(time_end1 - start_time))
     print(digit)
     GPIO.output(troyka, 1)
-    while digit > 6:
+    while digit > 150:
         digit = adc()
         print(digit)
         GPIO.output(led, to_bin(digit))
         Ts.append(time.time() - start_time)
         Vs.append(digit)
-        #time.sleep(0.01)
+        time.sleep(0.01)
+
         ##print("digit ={}, votage = {:.2f}\n".format(digit, digit * 3.3 / 256))
 
     end_time = time.time()
@@ -74,14 +77,16 @@ try:
     plt.show()
 
     with open("data.txt", "w") as f:
-        f.write(str(Vs))
+        f.write(str(Vs) + '\n')
     f.close()
-
+    with open("settings.txt", "w") as f:
+        f.write("Частота дискретизации" + str(1 /(count *(start_time - end_time)) ) + '\n' + 
+        'шаг квантования 0.0129\n')
+    f.close()
 finally:
     GPIO.output(troyka, 0)
     GPIO.output(dac, 0)
     GPIO.cleanup()
-
 
 
 
